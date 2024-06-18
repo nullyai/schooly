@@ -1,0 +1,80 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Student {
+  achievements   Achievement[]
+  bio            String?
+  createdAt      DateTime      @default(now())
+  email          String?
+  firstName      String?
+  friends        String?
+  id             String        @id @default(cuid())
+  lastName       String?
+  profilePicture Json?
+  teacher        Teacher?      @relation(fields: [teacherId], references: [id])
+  teacherId      String?
+  updatedAt      DateTime      @updatedAt
+}
+
+model Achievement {
+  createdAt   DateTime  @default(now())
+  date        DateTime?
+  description String?
+  id          String    @id @default(cuid())
+  student     Student?  @relation(fields: [studentId], references: [id])
+  studentId   String?
+  title       String?
+  updatedAt   DateTime  @updatedAt
+}
+
+model Teacher {
+  bio            String?
+  createdAt      DateTime  @default(now())
+  email          String?
+  firstName      String?
+  id             String    @id @default(cuid())
+  lastName       String?
+  profilePicture Json?
+  students       Student[]
+  updatedAt      DateTime  @updatedAt
+}
+
+model Interaction {
+  author    String?
+  comments  Json?
+  content   String?
+  createdAt DateTime  @default(now())
+  date      DateTime?
+  id        String    @id @default(cuid())
+  likes     Int?
+  updatedAt DateTime  @updatedAt
+}
+
+model Challenge {
+  createdAt    DateTime  @default(now())
+  description  String?
+  endDate      DateTime?
+  id           String    @id @default(cuid())
+  participants String?
+  startDate    DateTime?
+  title        String?
+  updatedAt    DateTime  @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
